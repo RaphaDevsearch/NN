@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Soft Computing Practicals</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#fff;color:#3b3b3b;font:13px "Segoe UI",system-ui,sans-serif}
+#app{display:grid;grid-template-rows:30px 1fr 22px;height:100%}
+#title{background:#ddd;display:flex;align-items:center;justify-content:center;font-size:12px;border-bottom:1px solid #cecece}
+#main{display:grid;grid-template-columns:1fr;min-height:0;position:relative}
+#side{background:#f3f3f3;border-right:1px solid #e5e5e5;overflow:auto;display:flex;flex-direction:column;position:absolute;z-index:5;top:0;bottom:0;left:0;width:280px;max-width:85%;transform:translateX(-102%);transition:transform .15s;box-shadow:2px 0 8px #0003;visibility:hidden}
+#side.open{transform:none;visibility:visible}
+#side h2{font-size:11px;font-weight:600;margin:0;padding:10px 16px 6px;color:#616161}
+#q{margin:0 12px 8px;padding:5px 8px;border:1px solid #cecece;background:#fff;font:inherit;border-radius:2px}
+#q:focus{outline:1px solid #005fb8;border-color:#005fb8}
+#menu a{display:flex;gap:10px;padding:5px 16px;color:#3b3b3b;text-decoration:none;border-left:2px solid transparent}
+#menu a b{flex:0 0 18px;text-align:right;color:#8a8a8a;font-weight:600}
+#menu a:hover{background:#e8e8e8}
+#menu a.on{background:#e4e6f1;border-left-color:#005fb8;color:#000}
+#menu a.on b{color:#005fb8}
+#ed{display:grid;grid-template-rows:35px 24px 1fr;min-width:0;min-height:0}
+#tabs{background:#f3f3f3;display:flex;border-bottom:1px solid #e5e5e5;align-items:stretch}
+#tab{background:#fff;border-top:1px solid #005fb8;padding:0 16px;display:flex;align-items:center;border-right:1px solid #e5e5e5}
+#sp{flex:1}
+.bt{border:0;background:none;font:inherit;padding:0 14px;cursor:pointer;color:#3b3b3b}
+.bt:hover{background:#e4e4e4}.bt:focus-visible{outline:2px solid #005fb8;outline-offset:-2px}
+#tg{border-right:1px solid #e5e5e5}
+#crumb{padding:0 20px;display:flex;align-items:center;color:#717171;font-size:12px;border-bottom:1px solid #f0f0f0}
+#code{position:relative;overflow:auto;scroll-behavior:smooth;font:14px/24px Consolas,"Courier New",monospace;padding-bottom:70vh}
+.l{display:flex;white-space:pre-wrap;color:#2e7d32}
+.l:hover{background:#f5f5f5}
+.n{flex:0 0 64px;text-align:right;padding-right:22px;color:#6e7681;user-select:none}
+.l:hover .n{color:#0b216f}
+.t{flex:1;padding-right:24px;overflow-wrap:anywhere;max-width:100ch}
+.h{font-weight:700;font-size:15px;color:#064e0a;background:#e3f1e3;border-top:1px solid #cfe3cf;margin-top:6px}
+.s{color:#0b4f9c;font-weight:700}
+.c{background:#f6f8fa;color:#795e26}
+.a{color:#2e7d32}.q1{color:#333;font-weight:600}
+#status{background:#007acc;color:#fff;display:flex;justify-content:space-between;padding:0 12px;align-items:center;font-size:12px}
+@media(max-width:700px){
+#main{grid-template-columns:1fr}
+#side{position:absolute;z-index:5;top:0;bottom:0;left:0;width:82%;max-width:300px;transform:translateX(-102%);transition:transform .15s;box-shadow:2px 0 8px #0003}
+#side.open{transform:none}
+#crumb{display:none}#ed{grid-template-rows:35px 0 1fr}
+.n{flex-basis:38px;padding-right:8px}#code{font-size:12.5px}
+#tab{padding:0 10px}
+}
+@media(prefers-reduced-motion:reduce){#code{scroll-behavior:auto}#side{transition:none}}
+</style></head><body>
+<div id="app">
+<div id="title">experiments.m – Soft Computing Lab (MATLAB)</div>
+<div id="main">
+<nav id="side"><h2>Practicals</h2><input id="q" type="search" placeholder="Search practicals" aria-label="Search practicals"><div id="menu"></div></nav>
+<section id="ed"><div id="tabs"><button class="bt" id="tg" aria-label="Hide or show menu" title="Hide / show menu (Ctrl+B)">&#9776; <span id="tl">Show menu</span></button><div id="tab"></div><div id="sp"></div><button class="bt" id="pv" aria-label="Previous practical">&#8249; Prev</button><button class="bt" id="nx" aria-label="Next practical">Next &#8250;</button></div><div id="crumb"></div><div id="code"></div></section>
+</div>
+<div id="status"><span id="pos">Ln 1, Col 1</span><span>MATLAB &nbsp;|&nbsp; Use &larr; &rarr; keys to switch</span></div>
+</div>
+<script>
+var P=[
+{t:"Intro Fuzzy Logic",what:"Fuzzy logic is reasoning with degrees of truth between 0 and 1, instead of only true/false. The Fuzzy Logic Designer is the MATLAB GUI used to build a fuzzy system (FIS).",purpose:"To get familiar with the Fuzzy Logic Designer and the parts of a fuzzy system: inputs, membership functions, rules, output.",how:["Launch MATLAB desktop.","Type fuzzy in the Command Window and press Enter.","The FIS Designer window opens.","Explore the Membership Function Editor and Rule Editor.","Add input and output variables.","Define membership functions and rules."],code:["fuzzy"],out:"Fuzzy Logic Designer window opens.",res:"Fuzzy Logic Designer explored successfully.",viva:[["What is fuzzy logic?","Logic that allows partial truth values between 0 and 1."],["Crisp vs fuzzy set?","Crisp: member or not (0/1). Fuzzy: partial membership (0 to 1)."],["Command to open the designer?","fuzzy"],["Main parts of a FIS?","Fuzzification, rule base, inference engine, defuzzification."]]},
+{t:"Membership Function Design",what:"A membership function (MF) is a curve that maps each input value to a membership degree between 0 and 1.",purpose:"To convert numerical inputs into fuzzy values so rules can reason with them.",how:["Open MATLAB.","Create range using x = 0:0.1:10.","Define triangular MF using trimf().","Plot it using plot().","Observe the shape."],code:["x = 0:0.1:10;","y = trimf(x, [2 5 8]);","plot(x, y)"],out:"Graph of a triangular membership function (peak 1 at x = 5).",res:"Membership function plotted successfully.",viva:[["What is a membership function?","A curve that defines how inputs map to membership values between 0 and 1."],["Types of MFs?","Triangular, trapezoidal, Gaussian."],["What is trimf()?","Function that creates a triangular MF."],["Range of membership values?","0 to 1."],["Why are MFs used?","To convert numerical inputs into fuzzy values for reasoning."]]},
+{t:"Fuzzy Rule Base",what:"A fuzzy rule base is a collection of IF-THEN rules that relate fuzzy inputs to fuzzy outputs.",purpose:"To store the expert knowledge the fuzzy system uses to make decisions.",how:["Open MATLAB.","Type fuzzy in the command window.","Open Rule Editor.","Set input/output variables.","Add IF-THEN rules.","Save and test the rule base."],code:["fuzzy","% Rule: IF temperature is high THEN fan speed is fast"],out:"Rule Viewer displays the rules and the output.",res:"Fuzzy rule base created successfully.",viva:[["What is a fuzzy rule?","A conditional statement using fuzzy logic to relate inputs to outputs."],["What is an IF-THEN rule?","IF sets the condition, THEN gives the action."],["What is a rule base?","A collection of all IF-THEN rules in a fuzzy system."],["What is FIS?","Fuzzy Inference System: maps inputs to outputs using fuzzy logic."],["What is the Rule Editor?","A GUI tool to define and edit fuzzy rules."]]},
+{t:"FLC",what:"A Fuzzy Logic Controller (FLC) is a control system that makes decisions using fuzzy rules and reasoning.",purpose:"To build a controller that handles imprecise inputs without needing an exact mathematical model.",how:["Open MATLAB.","Type fuzzy in the command window.","Create a new FIS using mamfis().","Define input/output variables.","Assign membership functions.","Create fuzzy rules.","Evaluate using Rule Viewer."],code:["fis = mamfis;"],out:"FIS is created successfully.",res:"Fuzzy controller developed.",viva:[["What is FLC?","A control system based on fuzzy logic rules and reasoning."],["What is Mamdani FIS?","A fuzzy model where both inputs and outputs are fuzzy sets."],["What is a fuzzy inference system?","A system that maps inputs to outputs using MFs and rules."],["What is the rule base in FLC?","The set of IF-THEN rules the controller uses to decide."]]},
+{t:"FLC using Simulink",what:"Simulink is a graphical MATLAB environment for modeling and simulating systems. The Fuzzy Logic Controller block plugs a FIS into a Simulink model.",purpose:"To test a fuzzy controller inside a control loop and see its behavior over time.",how:["Open MATLAB.","Type simulink in the command window.","Open Simulink Library Browser.","Search the Fuzzy Logic Controller block.","Drag and drop it into the workspace.","Connect input and output blocks.","Configure FLC parameters.","Run the simulation."],code:["simulink"],out:"Simulation runs successfully (scope shows the response).",res:"Simulation completed.",viva:[["What is Simulink?","A graphical environment for modeling, simulating and analyzing dynamic systems."],["What is the FLC block?","A block that integrates a FIS into a control loop."],["What is simulation?","Testing a model of a real system on a computer to see its behavior."],["What is a control system?","A system that regulates the behavior of other devices using control loops."]]},
+{t:"Application FLC",what:"A real-world use of FLC: here, a temperature controller that sets fan speed.",purpose:"To model a real system with fuzzy logic and see smooth, human-like control.",how:["Open MATLAB and type fuzzy.","Set input: Temperature. Set output: Fan Speed.","Add MFs: Low, Medium, High.","Open Rule Editor and add rules.","Rule: IF temperature is high THEN fan speed is fast.","Simulate in Rule Viewer.","Observe fan speed variation."],code:["fuzzy"],out:"Fan speed varies with temperature.",res:"Real-world system modeled successfully.",viva:[["What is FLC?","Fuzzy Logic Controller that uses fuzzy rules to make decisions."],["Why fuzzy logic for temperature control?","It handles non-linearity and gives smooth changes without sharp switching."],["What are MFs?","Curves mapping inputs to membership values 0 to 1."],["Explain IF-THEN rules in FLC.","IF part is the fuzzy input condition, THEN part is the fuzzy output action."]]},
+{t:"Neural Network toolbox",what:"The Neural Network (Deep Learning) Toolbox gives apps and functions to create, train and simulate neural networks in MATLAB.",purpose:"To get familiar with the tools available for building neural networks.",how:["Open MATLAB.","Type nnstart in the Command Window.","Neural Network Start window opens.","Choose an app: Fitting, Pattern Recognition, Clustering or Time Series."],code:["nnstart"],out:"Neural Network Start window opens with the four apps.",res:"Neural Network toolbox explored successfully.",viva:[["What is a neural network?","A model of connected neurons that learns patterns from data."],["Command to open the toolbox start window?","nnstart"],["Name the apps in it.","Fitting, Pattern Recognition, Clustering, Time Series."]]},
+{t:"ANN implementation",what:"Implementing an Artificial Neural Network (ANN) by code: create, train, then test a network.",purpose:"To train a network to learn a function (here y = sin(x)).",how:["Create input x and target t.","Create a network with feedforwardnet().","Train it using train().","Get output with net(x).","Plot target and output to compare."],code:["x = 0:0.1:10;","t = sin(x);","net = feedforwardnet(10);","net = train(net, x, t);","y = net(x);","plot(x, t, x, y)"],out:"Training window appears; plot shows output y closely following target t.",res:"ANN implemented and trained successfully.",viva:[["What is feedforwardnet()?","Creates a feed-forward network where data moves input to output only."],["What does train() do?","Adjusts weights to reduce error between output and target."],["What does 10 mean in feedforwardnet(10)?","10 neurons in the hidden layer."]]},
+{t:"ANN using GUI",what:"Building and training an ANN with MATLAB apps (such as Neural Fitting) instead of writing code.",purpose:"To create neural networks quickly with a step-by-step wizard.",how:["Type nftool (or nnstart then Fitting) in the command window.","Select input and target data.","Split data: training, validation, testing.","Choose number of hidden neurons.","Click Train.","View results and plots."],code:["nftool"],out:"Wizard opens; after training it shows MSE and regression plots.",res:"ANN trained using GUI successfully.",viva:[["What is nftool?","The Neural Fitting app for function-fitting problems."],["Why split data?","Training learns, validation prevents overfitting, testing checks final performance."],["Advantage of the GUI?","Easy and fast, no coding needed."]]},
+{t:"Neural Network structure",what:"The structure of a network: an input layer, one or more hidden layers, and an output layer, joined by weights.",purpose:"To understand and view how layers and neurons are arranged.",how:["Create a network with two hidden layers.","Use view() to display it.","Observe the layers, weights and biases."],code:["net = feedforwardnet([5 3]);","view(net)"],out:"Diagram: input, hidden layer 1 (5 neurons), hidden layer 2 (3 neurons), output.",res:"Network structure displayed successfully.",viva:[["What are the layers of an ANN?","Input, hidden and output layers."],["What are weights and bias?","Weights set the importance of inputs; bias shifts the neuron output."],["What is an activation function?","A function that decides a neuron's output, e.g. tansig, purelin."]]},
+{t:"Training algorithms",what:"A training algorithm is the method used to adjust weights to minimize error. Examples: trainlm (Levenberg-Marquardt), trainscg (scaled conjugate gradient), traingd (gradient descent).",purpose:"To compare how different algorithms affect speed and accuracy.",how:["Create a network.","Set net.trainFcn to the algorithm.","Train and note epochs and error.","Repeat with another algorithm and compare."],code:["net = feedforwardnet(10);","net.trainFcn = 'trainlm';","net = train(net, x, t);"],out:"Training window shows algorithm name, epochs and performance.",res:"Training algorithms compared successfully.",viva:[["What is trainlm?","Levenberg-Marquardt: fast, used for small and medium networks."],["What is gradient descent?","Moves weights opposite to the error slope to reduce error."],["What is an epoch?","One full pass of the training data through the network."]]},
+{t:"Performance Evaluation",what:"Measuring how well a trained network works, usually with Mean Squared Error (MSE) and a regression (R) value.",purpose:"To check accuracy and make sure the network is not overfitting.",how:["Train the network and keep tr.","Get output y = net(x).","Compute error with perform().","Plot with plotperform() and plotregression()."],code:["[net, tr] = train(net, x, t);","y = net(x);","e = perform(net, t, y)","plotperform(tr); plotregression(t, y)"],out:"A small MSE value; performance plot falls over epochs; regression R close to 1.",res:"Network performance evaluated successfully.",viva:[["What is MSE?","Average of the squared differences between target and output."],["What does R close to 1 mean?","Output matches target almost perfectly."],["What is overfitting?","Network fits training data well but fails on new data."]]}
+];
+var code=document.getElementById('code'),menu=document.getElementById('menu'),n=0,cur=-1;
+function add(txt,cls,id){n++;var d=document.createElement('div');d.className='l'+(cls?' '+cls:'');if(id)d.id=id;
+d.innerHTML='<span class="n">'+n+'</span><span class="t"></span>';d.lastChild.textContent=txt;code.appendChild(d)}
+function sec(x){add('%');add('% '+x,'s')}
+P.forEach(function(p,i){var k=i+1;
+var a=document.createElement('a');a.href='#p'+k;a.id='m'+k;a.innerHTML='<b>'+k+'</b><span></span>';a.lastChild.textContent=p.t;menu.appendChild(a);
+add('% PRACTICAL '+k+': '+p.t,'h','p'+k);
+sec('What is it?');add('%   '+p.what);
+sec('Purpose');add('%   '+p.purpose);
+sec('How (procedure)');p.how.forEach(function(s,j){add('%   '+(j+1)+'. '+s)});
+sec('Example (code / command)');p.code.forEach(function(c){add('%   '+c,'c')});
+sec('Output');add('%   '+p.out);
+sec('Result');add('%   '+p.res);
+sec('Viva questions and answers');
+p.viva.forEach(function(v){add('%   Q: '+v[0],'q1');add('%   A: '+v[1],'a')});
+add('');add('');
+});
+function pad(k){return('0'+k).slice(-2)}
+function setActive(i){if(i===cur)return;cur=i;var k=i+1;
+document.querySelectorAll('#menu a').forEach(function(a){a.classList.toggle('on',a.id==='m'+k)});
+document.getElementById('tab').textContent='practical_'+pad(k)+'.m';
+document.getElementById('crumb').textContent='experiments > practical_'+pad(k)+'.m  >  '+P[i].t;
+var on=document.getElementById('m'+k);if(on)on.scrollIntoView({block:'nearest'})}
+function upd(){var rows=code.querySelectorAll('.h'),i=0,top=code.getBoundingClientRect().top+40;
+rows.forEach(function(r,j){if(r.getBoundingClientRect().top<=top)i=j});
+if(code.scrollTop+code.clientHeight>=code.scrollHeight-2)i=P.length-1;
+setActive(i);document.getElementById('pos').textContent='Ln '+(Math.floor(code.scrollTop/24)+1)+', Col 1'}
+function go(i,smooth){i=Math.max(0,Math.min(P.length-1,i));var el=document.getElementById('p'+(i+1));
+code.scrollTo({top:el.offsetTop,behavior:smooth===false?'auto':'smooth'});history.replaceState(null,'','#p'+(i+1))}
+code.addEventListener('scroll',upd);
+var side=document.getElementById('side');
+menu.addEventListener('click',function(e){var a=e.target.closest('a');if(!a)return;e.preventDefault();go(+a.id.slice(1)-1);toggleMenu(false)});
+document.getElementById('pv').onclick=function(){go(Math.max(cur,0)-1)};
+document.getElementById('nx').onclick=function(){go(cur+1)};
+function toggleMenu(f){var o=typeof f==='boolean'?f:!side.classList.contains('open');side.classList.toggle('open',o);document.getElementById('tl').textContent=o?'Hide menu':'Show menu'}
+document.getElementById('tg').onclick=toggleMenu;
+code.addEventListener('click',function(){toggleMenu(false)});
+document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='b'){e.preventDefault();toggleMenu()}});
+document.getElementById('q').addEventListener('input',function(e){var v=e.target.value.toLowerCase();
+document.querySelectorAll('#menu a').forEach(function(a,i){a.style.display=(P[i].t.toLowerCase().indexOf(v)>-1||String(i+1)===v)?'':'none'})});
+document.addEventListener('keydown',function(e){if(e.target.tagName==='INPUT')return;
+if(e.key==='ArrowRight'){go(cur+1)}else if(e.key==='ArrowLeft'){go(cur-1)}});
+upd();
+if(location.hash){var t=document.getElementById(location.hash.slice(1));if(t){code.scrollTop=t.offsetTop;upd()}}
+</script></body></html>
