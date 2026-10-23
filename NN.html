@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deep Learning Notes</title>
+<style>
+:root{--bg:#fff;--side:#f3f3f3;--act:#2c2c2c;--acti:#a0a0a0;--tab:#ececec;--bd:#d4d4d4;--tx:#1f1f1f;--mut:#616161;--fn:#795e26;--kw:#0000ff;--str:#a31515;--cmt:#008000;--ln:#237893;--code:#f3f3f3;--hl:#e4e6f1;--prop:#001080;--tb:#dddddd}
+:root[data-theme=dark]{--bg:#1e1e1e;--side:#252526;--act:#333333;--acti:#858585;--tab:#2d2d2d;--bd:#3c3c3c;--tx:#d4d4d4;--mut:#9d9d9d;--fn:#dcdcaa;--kw:#569cd6;--str:#ce9178;--cmt:#6a9955;--ln:#858585;--code:#2a2a2b;--hl:#37373d;--prop:#9cdcfe;--tb:#3c3c3c}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--tx);font:14px/1.6 "Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:1px solid #007acc;outline-offset:-1px}
+#title{height:34px;background:var(--tb);display:flex;align-items:center;gap:8px;padding:0 8px;flex:none}
+#title .menu{display:none;font-size:18px;padding:0 6px}
+#title .mid{flex:1;display:flex;justify-content:center}
+#title .find{width:min(420px,100%);background:var(--bg);border:1px solid var(--bd);border-radius:5px;color:var(--mut);padding:1px 10px;text-align:center;font-size:12.5px}
+#theme{width:30px;height:26px;border-radius:4px;font-size:16px}
+#theme:hover{background:var(--hl)}
+#main{flex:1;display:flex;min-height:0;position:relative}
+#act{width:48px;background:var(--act);display:flex;flex-direction:column;align-items:center;padding-top:6px;flex:none}
+#act button{width:48px;height:46px;color:var(--acti);font-size:20px}
+#act button:hover,#act button.on{color:#fff}
+#act button.on{box-shadow:inset 2px 0 #fff}
+#side{width:270px;background:var(--side);border-right:1px solid var(--bd);overflow:auto;flex:none}
+#side.collapsed{display:none}
+#side h2{font-size:11px;font-weight:400;letter-spacing:.08em;padding:10px 16px;color:var(--mut)}
+.unit>button{width:100%;display:flex;align-items:center;gap:6px;padding:3px 10px;text-align:left;font-weight:600;font-size:13px}
+.unit>button:hover,.topic:hover{background:var(--hl)}
+.unit .arr{width:12px;font-size:10px;transition:transform .12s}
+.unit.open .arr{transform:rotate(90deg)}
+.badge{margin-left:auto;background:#007acc;color:#fff;border-radius:9px;font-size:11px;padding:0 7px;font-weight:400}
+.soon{font-size:11px;color:var(--mut);font-weight:400;margin-left:auto}
+.unit .list{display:none}
+.unit.open .list{display:block}
+.topic{display:block;width:100%;text-align:left;padding:2px 10px 2px 38px;font-size:13px}
+.topic.on{background:var(--hl);box-shadow:inset 2px 0 #007acc}
+#veil{display:none}
+#ed{flex:1;display:flex;flex-direction:column;min-width:0}
+#tabs{display:flex;background:var(--side);overflow-x:auto;flex:none;min-height:35px}
+.tab{display:flex;align-items:center;gap:8px;padding:0 10px 0 14px;background:var(--tab);border-right:1px solid var(--bd);color:var(--mut);white-space:nowrap;font-size:13px;cursor:pointer;border-top:1px solid transparent}
+.tab.on{background:var(--bg);color:var(--tx);border-top-color:#007acc}
+.tab .x{width:18px;height:18px;border-radius:3px;line-height:16px;font-size:15px;text-align:center}
+.tab .x:hover{background:var(--hl)}
+#crumb{padding:3px 16px;font-size:12px;color:var(--mut);flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#scroll{flex:1;overflow:auto;padding:6px 0 60px}
+#doc{counter-reset:l;font-family:Consolas,"Fira Code","Courier New",monospace;font-size:13.5px;max-width:880px}
+.ln{counter-increment:l;position:relative;padding:0 16px 0 58px;min-height:22px;line-height:22px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ln::before{content:counter(l);position:absolute;left:0;width:42px;text-align:right;color:var(--ln);user-select:none}
+.ln:hover{background:var(--hl)}
+.i1{padding-left:84px}.i2{padding-left:110px}
+.fn{color:var(--fn)}.kwd,.kw{color:var(--kw)}.str{color:var(--str)}.cmt{color:var(--cmt)}.prop{color:var(--prop)}
+.code{background:var(--code);color:var(--str)}
+.tw{overflow-x:auto;padding:4px 0}
+table{border-collapse:collapse;font:13px "Segoe UI",system-ui,sans-serif}
+th,td{border:1px solid var(--bd);padding:4px 10px;text-align:left;line-height:1.45;vertical-align:top}
+th{background:var(--hl);color:var(--prop)}
+.ln.tblrow{white-space:normal;line-height:1.4}
+#bar{height:24px;background:#007acc;color:#fff;display:flex;align-items:center;gap:16px;padding:0 10px;font-size:12px;flex:none;white-space:nowrap;overflow:hidden}
+#bar .r{margin-left:auto}
+#bar button{font-size:12px;padding:0 6px;height:24px}
+#bar button:hover{background:#ffffff30}
+#pal{position:fixed;inset:0;background:#0006;display:none;justify-content:center;align-items:flex-start;padding-top:60px;z-index:20}
+#pal.on{display:flex}
+#pbox{width:min(560px,94vw);background:var(--side);border:1px solid var(--bd);box-shadow:0 6px 24px #0007;border-radius:5px}
+#pin{width:100%;background:var(--bg);color:var(--tx);border:1px solid #007acc;padding:6px 10px;margin:6px;width:calc(100% - 12px);font:14px "Segoe UI",system-ui,sans-serif}
+#plist{max-height:300px;overflow:auto;padding-bottom:4px}
+#plist button{display:block;width:100%;text-align:left;padding:3px 14px;font-size:13px}
+#plist button.sel{background:#094771;color:#fff}
+#plist small{color:var(--mut);margin-left:8px}
+#plist button.sel small{color:#cfe}
+.empty{padding:20px 16px;color:var(--mut)}
+@media(max-width:700px){
+#title .menu{display:block}
+#act{display:none}
+#side{position:absolute;z-index:10;top:0;bottom:0;left:0;transform:translateX(-100%);transition:transform .15s;width:82%;max-width:300px}
+#side.open{transform:none;box-shadow:4px 0 16px #0006}
+#veil.on{display:block;position:absolute;inset:0;background:#0005;z-index:9}
+.ln{padding-left:44px;padding-right:8px}.ln::before{width:30px}
+.i1{padding-left:58px}.i2{padding-left:72px}
+#bar .hide{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="title">
+  <button class="menu" id="menu" aria-label="Open explorer">&#9776;</button>
+  <div class="mid"><button class="find" id="find">Search topics (Ctrl+P)</button></div>
+  <button id="theme" aria-label="Toggle light and dark mode" title="Toggle theme"></button>
+</div>
+<div id="main">
+  <nav id="act">
+    <button class="on" id="aExp" aria-label="Explorer" title="Explorer">&#128193;</button>
+    <button id="aSea" aria-label="Search" title="Search (Ctrl+P)">&#128269;</button>
+  </nav>
+  <aside id="side"><h2>EXPLORER: DEEP LEARNING</h2><div id="tree"></div></aside>
+  <div id="veil"></div>
+  <section id="ed">
+    <div id="tabs"></div>
+    <div id="crumb"></div>
+    <div id="scroll"><div id="doc"></div></div>
+  </section>
+</div>
+<div id="bar"><span id="sUnit"></span><span id="sW" class="hide"></span><span id="sT" class="hide"></span><span class="r"><button id="sTheme"></button></span></div>
+<div id="pal"><div id="pbox"><input id="pin" placeholder="Type a topic name..." autocomplete="off"><div id="plist"></div></div></div>
+
+<script>
+/* ===== NOTES DATA: add new units here, layout code needs no change =====
+   topic fields: t=title, d=definition, p=[key points], fl=formula/code label, f=[lines],
+   ex=example, tip=exam tip, tb={h:[head],r:[[row]]} optional table. Use **word** for key terms.
+   Unit "qa": {q:[questions], s:[summary lines]} shown as the last topic. */
+const D={name:"Deep Learning",units:[
+{id:1,name:"Introduction to Neural Network",w:10,h:4,ready:true,topics:[
+{t:"Introduction to Neural Network",
+ d:"A **neural network** is a computer model inspired by the human brain. It learns patterns from data instead of using fixed rules. It is built from connected units called **neurons** arranged in layers.",
+ p:["Learns from examples (training data)","Has an input layer, hidden layers and an output layer","Connections carry **weights**; each neuron also has a **bias**","Used in image, speech, text and prediction tasks","It is a part of Machine Learning"],
+ fl:"formula",f:["y = f(w1*x1 + w2*x2 + ... + wn*xn + b)","x = inputs, w = weights, b = bias, f = activation function, y = output"],
+ ex:"Spam filter: the words of an email are the inputs, the output is spam or not spam.",
+ tip:"Asked as 'Define neural network' or 'Write a short note' (3 marks)."},
+{t:"Biological and Artificial Neurons",
+ d:"A **biological neuron** is a nerve cell that receives signals, processes them and passes them on. An **artificial neuron** is its simple mathematical copy: it takes inputs, multiplies by weights, adds them and applies an activation function.",
+ p:["Biological neuron: dendrites, cell body (soma), axon, synapse","Artificial neuron: inputs, weights, summation, activation, output","Weight = strength of a synapse","Brain neurons are slow but huge in number (about 86 billion)"],
+ tb:{h:["Biological","Artificial"],r:[["Dendrites (receive signal)","Inputs x"],["Synapse strength","Weight w"],["Cell body (soma)","Sum + activation f"],["Axon (sends signal)","Output y"],["Slow, very many neurons","Fast, far fewer neurons"]]},
+ fl:"diagram",f:["x1 --w1--\\","x2 --w2---> [ SUM(w*x) + b ] --> f(.) --> y","x3 --w3--/","net = SUM(wi*xi) + b ;  y = f(net)"],
+ ex:"Deciding to go out: weather, free time and friends are inputs. Each has a weight. If the total is high enough, you go.",
+ tip:"Draw the neuron diagram and the comparison table (4 to 7 marks)."},
+{t:"Types of Activation Functions",
+ d:"An **activation function** decides whether a neuron should fire and how strongly. It adds **non-linearity**, so the network can learn complex patterns.",
+ p:["Without it, the network is only a linear model","**ReLU** is the default for hidden layers (fast, simple)","**Sigmoid** and **Tanh** can suffer from the vanishing gradient problem","**Softmax** is used in the output layer for many classes","**Leaky ReLU** fixes the 'dying ReLU' problem"],
+ tb:{h:["Function","Formula","Range","Use"],r:[["Step","1 if x>=0 else 0","0 or 1","Perceptron"],["Sigmoid","1 / (1 + e^-x)","(0, 1)","Binary output"],["Tanh","(e^x - e^-x)/(e^x + e^-x)","(-1, 1)","Hidden layers, zero-centred"],["ReLU","max(0, x)","[0, inf)","Hidden layers (default)"],["Leaky ReLU","max(0.01x, x)","(-inf, inf)","Avoids dead neurons"],["Softmax","e^xi / SUM(e^xj)","(0, 1), sum = 1","Multi-class output"]]},
+ fl:"formula",f:["Sigmoid(0) = 1/(1+1) = 0.5","ReLU(-3) = 0 ,  ReLU(4) = 4"],
+ ex:"Sigmoid gives the probability that an email is spam, for example 0.92 means 92% spam.",
+ tip:"Common: 'Explain any three activation functions with formula and graph shape'."},
+{t:"Implementation of ANN",
+ d:"Implementing an ANN means building and training the network in code, step by step.",
+ p:["1. Prepare data: clean, normalise, split into train and test","2. Define the architecture (layers, neurons, activations)","3. Initialise weights randomly","4. Forward pass, then calculate loss","5. Backpropagation and weight update","6. Repeat for many epochs, then test the model"],
+ fl:"code (Keras)",f:["model = Sequential([","  Dense(8, activation='relu', input_shape=(4,)),","  Dense(1, activation='sigmoid')])","model.compile(optimizer='adam', loss='binary_crossentropy')","model.fit(X_train, y_train, epochs=50)"],
+ ex:"Predict if a student passes using 4 inputs: study hours, attendance, marks, sleep.",
+ tip:"Learn the 6 steps in order. Short code may be asked in practicals."},
+{t:"Architecture",
+ d:"The **architecture** of an ANN is how neurons are arranged in layers and connected.",
+ p:["**Input layer**: receives the raw data, one neuron per feature","**Hidden layer(s)**: do the learning; more layers = deeper network","**Output layer**: gives the final result","**Feed-forward**: data moves only forward","Types: single-layer perceptron, multilayer perceptron"],
+ fl:"formula + diagram",f:["Input(4) -> Hidden(5) -> Output(1)","Parameters of a layer = (inputs x neurons) + neurons","Weights = 4x5 + 5x1 = 25 ;  Biases = 5 + 1 = 6 ;  Total = 31"],
+ ex:"Image of 28x28 pixels: 784 input neurons, hidden layers, 10 output neurons for digits 0 to 9.",
+ tip:"Numerical on counting parameters is possible. Draw a neat layered diagram."},
+{t:"Learning Process",
+ d:"Learning means adjusting the **weights** and **biases** again and again so that the error between prediction and actual value becomes small.",
+ p:["Forward propagation gives a prediction","The **loss function** measures the error","Backward step finds how to change each weight","**Gradient descent** updates the weights","**Epoch** = one full pass over the data; **learning rate** = step size","Types: supervised, unsupervised, reinforcement"],
+ fl:"formula",f:["w_new = w_old - eta * (dL/dw)","MSE loss = (1/n) * SUM (y - y_hat)^2","eta = learning rate, L = loss, dL/dw = gradient"],
+ ex:"Learning to throw a ball: you miss, see the error, adjust your throw, and repeat.",
+ tip:"Asked as 'Explain the learning process of ANN' with the weight update formula."},
+{t:"Backpropagation",
+ d:"**Backpropagation** is the algorithm that sends the error backward from the output layer to the earlier layers. It uses the **chain rule** to find the gradient of the loss for every weight.",
+ p:["Step 1: forward pass and find the loss","Step 2: calculate the gradient at the output layer","Step 3: move backward layer by layer using the chain rule","Step 4: update the weights using gradient descent","Repeat until the loss is small"],
+ fl:"formula + numerical",f:["dL/dw = dL/dy_hat * dy_hat/dz * dz/dw","Example: y_hat = w*x, x = 2, w = 0.5, target t = 3, eta = 0.1","y_hat = 1 ;  L = (t - y_hat)^2 = 4","dL/dw = -2(t - y_hat)*x = -2*2*2 = -8","w_new = 0.5 - 0.1*(-8) = 1.3  (new y_hat = 2.6, closer to 3)"],
+ ex:"A teacher marks your test (error) and tells you which topic to fix, so you correct each part.",
+ tip:"Very common: 'Explain backpropagation with steps' and a one-step numerical (7 marks)."},
+{t:"Deep Learning",
+ d:"**Deep learning** is a part of machine learning that uses neural networks with many hidden layers. It learns features automatically from raw data.",
+ p:["'Deep' means many layers","Automatic feature extraction","Needs large data and a GPU","AI > Machine Learning > Deep Learning","Used in face recognition, self-driving cars, translation, chatbots"],
+ tb:{h:["Point","Machine Learning","Deep Learning"],r:[["Features","Made by hand","Learned automatically"],["Data needed","Small is fine","Very large"],["Hardware","CPU is enough","GPU preferred"],["Training time","Short","Long"],["Best for","Tabular data","Images, speech, text"]]},
+ fl:"diagram",f:["AI  >  Machine Learning  >  Deep Learning"],
+ ex:"Phone face unlock: the network learns your face features from many photos.",
+ tip:"'Difference between ML and DL' is a frequent 4-mark question."}
+],
+qa:{q:["Define a neural network and draw an artificial neuron.","Compare a biological neuron and an artificial neuron.","Explain Sigmoid, Tanh and ReLU with formula and range.","Explain backpropagation with steps. Solve one weight update.","Differentiate Machine Learning and Deep Learning."],
+s:["A neural network has input, hidden and output layers joined by weights.","A neuron computes y = f(SUM(w*x) + b).","Activation functions add non-linearity: ReLU for hidden, Sigmoid/Softmax for output.","Learning = forward pass, loss, backpropagation, then w_new = w_old - eta*gradient.","Deep learning = many hidden layers, automatic features, needs big data and a GPU."]}},
+{id:2,name:"Historical Context and Motivation for Deep Learning",w:15,h:8,ready:true,topics:[
+{t:"Basic Supervised Classification Task",d:"In **supervised classification** the model learns from labelled examples (X, y) and then predicts the class of new data.",p:["Training data has inputs **X** and labels **y**","Data is split into train and test sets","Model gives a score for each class; **softmax** turns scores into probabilities","**Cross-entropy** is the usual loss","Output = class with the highest probability"],fl:"formula",f:["score = W.x + b","p = softmax(score)","Loss = - SUM( y * log(p) )"],ex:"Classify a photo as cat, dog or bird after seeing many labelled photos.",tip:"Asked as 'Explain supervised classification with an example' (3 marks)."},
+{t:"Optimizing Logistic Classifier using Gradient Descent",d:"A **logistic classifier** gives the probability of class 1 using the sigmoid. **Gradient descent** moves the weights step by step to reduce the loss.",p:["z = w.x + b, then y_hat = sigmoid(z)","Loss = binary cross-entropy","Gradient tells the direction of increasing loss, so we move opposite","**Learning rate (eta)** controls the step size","Too large eta = overshoot; too small = very slow"],fl:"formula + numerical",f:["y_hat = 1 / (1 + e^-z)","L = -[ y*log(y_hat) + (1-y)*log(1-y_hat) ]","w = w - eta * (y_hat - y) * x","Example: x=1, w=0, b=0, y=1, eta=0.1","y_hat = 0.5 ; gradient = (0.5-1)*1 = -0.5","w_new = 0 - 0.1*(-0.5) = 0.05"],ex:"Predict pass or fail from study hours and improve the weight after every update.",tip:"Write the update rule and solve one iteration (4 to 7 marks)."},
+{t:"Stochastic Gradient Descent",d:"**SGD** updates the weights using one random sample (or a small batch) instead of the whole dataset.",p:["Much faster per update on big data","Updates are noisy, but this can help escape bad spots","**Mini-batch** (e.g. 32 samples) is the common choice","Needs a good learning rate","Data is shuffled every epoch"],tb:{h:["Type","Samples per update","Speed","Stability"],r:[["Batch GD","All","Slow","Very smooth"],["SGD","1","Fast","Noisy"],["Mini-batch","32 to 256","Fast","Balanced"]]},fl:"formula",f:["w = w - eta * grad( L(w; x_i, y_i) )"],ex:"Learning from one student's mark at a time instead of waiting for the whole class result.",tip:"'Difference between batch GD and SGD' is very common."},
+{t:"Momentum",d:"**Momentum** adds a fraction of the previous update to the current one. It works like a rolling ball that gains speed in a steady direction.",p:["Smooths the noisy SGD path","Speeds up along flat, steady directions","Reduces zig-zag in narrow valleys","**beta** is usually 0.9","Helps pass small bumps"],fl:"formula + numerical",f:["v = beta*v + eta*grad","w = w - v","beta=0.9, eta=0.1, grad=2, v=0","Step 1: v = 0.2, so w decreases by 0.2","Step 2: v = 0.9*0.2 + 0.2 = 0.38 (bigger step)"],ex:"A ball rolling downhill keeps moving even on a small flat patch.",tip:"Write the two formulas and compare with plain SGD."},
+{t:"Adaptive Sub-gradient Method (Adagrad)",d:"**Adagrad** gives each weight its own learning rate. Weights with large past gradients get smaller steps, rare ones get larger steps.",p:["Stores the sum of squared gradients **G**","Good for sparse data (text)","No need to tune eta much","Weakness: G keeps growing, so learning rate shrinks to almost zero","Fixed later by RMSProp and Adam"],tb:{h:["Point","SGD","Momentum","Adagrad"],r:[["Learning rate","Fixed","Fixed","Adaptive per weight"],["Uses history","No","Past updates","Past squared gradients"],["Speed","Slow","Faster","Fast at start"],["Problem","Noisy","Overshoot","Rate decays too much"]]},fl:"formula + numerical",f:["G = G + g^2","w = w - ( eta / sqrt(G + eps) ) * g","g=2, G=4 after update, eta=0.1","step = 0.1/2 * 2 = 0.1"],ex:"A rare word in a text gets a bigger update than a very common word.",tip:"Often asked: 'Compare SGD, Momentum and Adagrad' (table)."}
+],qa:{q:["Explain supervised classification with an example.","Optimize a logistic classifier using gradient descent. Solve one step.","Differentiate batch GD, SGD and mini-batch.","Explain Momentum with formula.","Compare SGD, Momentum and Adagrad."],s:["Classification learns from labelled data using softmax and cross-entropy.","Gradient descent: w = w - eta*gradient.","SGD uses 1 sample or a mini-batch, so it is fast but noisy.","Momentum: v = beta*v + eta*grad keeps direction and smooths the path.","Adagrad gives each weight its own rate using sum of squared gradients."]}},
+{id:3,name:"Overview about Deep Learning Algorithms",w:25,h:12,ready:true,topics:[
+{t:"Convolutional Neural Networks (CNNs)",d:"A **CNN** is a network for grid data like images. It uses **filters** to find edges, shapes and objects.",p:["Layers: convolution, ReLU, pooling, fully connected","Shares weights, so fewer parameters","Learns features automatically","Best for images and video"],fl:"flow",f:["Image -> Conv -> ReLU -> Pool -> Conv -> Pool -> Flatten -> FC -> Output"],ex:"Recognising handwritten digits.",tip:"Draw the layer flow."},
+{t:"Long Short Term Memory Networks (LSTMs)",d:"An **LSTM** is a special RNN with a memory cell and three gates. It remembers long-term information.",p:["**Forget gate**: what to throw away","**Input gate**: what new info to store","**Output gate**: what to send out","Solves the vanishing gradient problem of RNN"],fl:"formula",f:["c_t = f_t * c_(t-1) + i_t * g_t","h_t = o_t * tanh(c_t)"],ex:"Predicting the next word in a long sentence.",tip:"Name the 3 gates and their jobs."},
+{t:"Recurrent Neural Networks (RNNs)",d:"An **RNN** processes sequences. Its output at one step is fed back as input to the next step, so it has a memory.",p:["Same weights at every time step","Used for text, speech, time series","Problem: **vanishing gradient** on long sequences","Trained by backpropagation through time (BPTT)"],tb:{h:["Point","RNN","LSTM"],r:[["Memory","Short","Long"],["Gates","None","3 gates"],["Vanishing gradient","Yes","Mostly solved"],["Speed","Faster","Slower"]]},fl:"formula",f:["h_t = tanh(Wh*h_(t-1) + Wx*x_t + b)"],ex:"Predicting tomorrow's temperature from past days.",tip:"RNN vs LSTM table is common."},
+{t:"Generative Adversarial Networks (GANs)",d:"A **GAN** has two networks that compete: a **generator** makes fake data and a **discriminator** tells real from fake.",p:["Generator improves to fool the discriminator","Discriminator improves to catch fakes","Both train together (a game)","Used to create images, faces, art","Hard to train (unstable)"],fl:"flow",f:["Noise -> Generator -> Fake -> Discriminator -> Real or Fake?","Real data ------------------> Discriminator"],ex:"Creating realistic face photos of people who do not exist.",tip:"Explain the generator vs discriminator game."},
+{t:"Radial Basis Function Networks (RBFNs)",d:"An **RBFN** has one hidden layer that uses radial basis (Gaussian) functions. A neuron fires strongly when the input is close to its centre.",p:["3 layers: input, hidden (RBF), output","Hidden neuron = distance from a centre","Output = weighted sum","Fast training, good for function approximation"],fl:"formula",f:["phi(x) = exp( -||x - c||^2 / (2*sigma^2) )","c = centre, sigma = width"],ex:"Predicting house price from nearby similar houses.",tip:"Write the Gaussian formula."},
+{t:"Multilayer Perceptrons (MLPs)",d:"An **MLP** is a feed-forward network with one or more hidden layers, fully connected, trained by backpropagation.",p:["Every neuron connects to all next-layer neurons","Uses non-linear activations","Solves problems a single perceptron cannot (like XOR)","Base of most deep networks"],fl:"formula",f:["h = f(W1*x + b1) ;  y = g(W2*h + b2)"],ex:"Predicting loan approval from age, income and score.",tip:"Mention XOR as the reason for hidden layers."},
+{t:"Self Organizing Maps (SOMs)",d:"A **SOM** is an unsupervised network that maps high-dimensional data to a 2D grid while keeping similar items close.",p:["No labels needed","Winner neuron = **Best Matching Unit (BMU)**","BMU and its neighbours move towards the input","Used for clustering and visualisation"],fl:"formula",f:["w_new = w_old + eta * h * (x - w_old)","h = neighbourhood function"],ex:"Grouping customers by buying behaviour on a map.",tip:"Explain BMU and neighbourhood."},
+{t:"Deep Belief Networks (DBNs)",d:"A **DBN** is a stack of RBMs. Each layer is trained one by one (greedy pre-training), then the whole network is fine-tuned.",p:["Top layers have undirected links, lower have directed","Unsupervised pre-training then supervised fine-tuning","Helped train deep nets before ReLU and big data","Used in image and speech recognition"],fl:"flow",f:["Input -> RBM 1 -> RBM 2 -> RBM 3 -> Output (fine-tune)"],ex:"Recognising spoken digits.",tip:"Remember: DBN = stacked RBMs."},
+{t:"Restricted Boltzmann Machines (RBMs)",d:"An **RBM** has two layers, visible and hidden, with links only between layers (none inside a layer). It learns the probability distribution of the data.",p:["Two layers only; 'restricted' = no links within a layer","Trained with Contrastive Divergence","Used for feature learning and recommendation","Building block of DBNs"],fl:"formula",f:["Energy E(v,h) = -a.v - b.h - v.W.h","P(v,h) = e^(-E) / Z"],ex:"Movie recommendation: learns which movies are liked together.",tip:"Draw the 2-layer diagram."},
+{t:"Autoencoders",d:"An **autoencoder** compresses the input into a small code and then rebuilds it. It learns by minimising the reconstruction error.",p:["Parts: encoder, code (bottleneck), decoder","Unsupervised","Used for noise removal, compression, anomaly detection","Variants: denoising, sparse, variational"],fl:"flow",f:["x -> Encoder -> code z -> Decoder -> x_hat","Loss = ||x - x_hat||^2"],ex:"Removing noise from a scanned photo.",tip:"Draw encoder-code-decoder."}
+],qa:{q:["Explain CNN with its layers.","Compare RNN and LSTM. Name the LSTM gates.","Explain how a GAN works.","What is an Autoencoder? Give uses.","Differentiate RBM and DBN. Write a note on SOM."],s:["CNN = conv, pool, FC for images; RNN and LSTM for sequences.","LSTM has forget, input and output gates to fix vanishing gradient.","GAN = generator vs discriminator game.","MLP, RBFN are feed-forward; SOM, RBM, Autoencoder learn without labels.","DBN is a stack of RBMs trained layer by layer."]}},
+{id:4,name:"Convolutional Neural Network",w:30,h:13,ready:true,topics:[
+{t:"What is Convolutional Neural Network",d:"A **CNN** is a deep network that uses the **convolution** operation to learn spatial features from images.",p:["Layers: Convolution, Activation (ReLU), Pooling, Fully connected","Filters slide over the image to detect edges, textures, objects","Early layers find edges, deeper layers find shapes","Uses weight sharing, so fewer parameters","Trained by backpropagation"],fl:"flow",f:["Input -> Conv+ReLU -> Pooling -> Conv+ReLU -> Pooling -> Flatten -> FC -> Softmax"],ex:"A CNN reads a photo and says 'cat'.",tip:"Draw the CNN flow and explain each layer (7 marks)."},
+{t:"Objectives and Application of CNN",d:"The objective of a CNN is to extract useful features from grid-like data and use them for prediction.",p:["Objective: automatic feature extraction","Objective: fewer parameters, better accuracy","Applications: image classification, object detection","Applications: face recognition, medical imaging, self-driving cars","Applications: video analysis, OCR"],ex:"X-ray image: CNN finds signs of pneumonia.",tip:"List 5 applications with one line each."},
+{t:"Why Convolution over Feed-Forward Neural Nets?",d:"A feed-forward net flattens the image and needs huge weights. Convolution keeps the 2D structure and reuses small filters.",p:["**Sparse connectivity**: each neuron sees a small area","**Parameter sharing**: one filter used everywhere","**Translation invariance**: finds an object anywhere","Far fewer parameters, less over-fitting"],tb:{h:["Point","Feed-forward","CNN"],r:[["Input","Flattened vector","2D image kept"],["Parameters","Very many","Few (shared)"],["Spatial info","Lost","Kept"],["Over-fitting","High","Lower"]]},fl:"numerical",f:["Image 100x100 -> 10,000 inputs","FC with 1000 neurons = 10,000,000 weights","CNN 3x3 filter = only 9 weights (shared)"],ex:"A cat in any corner of a photo is still detected.",tip:"Write the 3 reasons: sparse, sharing, invariance."},
+{t:"Convolution Operation",d:"**Convolution** slides a small **kernel (filter)** over the input, multiplies element by element and adds the result to build a **feature map**.",p:["**Stride**: step size of the kernel","**Padding**: zeros added around the border","Output shrinks without padding","Many kernels give many feature maps"],fl:"formula + numerical",f:["Output size = (n - k + 2p)/s + 1","Input [[1,2,3],[4,5,6],[7,8,9]], kernel [[1,0],[0,1]]","(0,0): 1*1 + 5*1 = 6 ;  (0,1): 2 + 6 = 8","(1,0): 4 + 8 = 12 ;  (1,1): 5 + 9 = 14","Output = [[6,8],[12,14]]  (size (3-2)/1+1 = 2)"],ex:"A vertical-edge kernel lights up the edges of a door.",tip:"Numerical on convolution and output size is very common."},
+{t:"Data Types",d:"CNNs work on data with a grid structure. The number of dimensions decides the kernel type.",p:["**1D**: audio, time series, text (1D conv)","**2D**: grayscale image (H x W)","**3D**: colour image (H x W x 3 channels), video, CT scans","Each data type uses the matching kernel (1D, 2D, 3D)"],tb:{h:["Data","Shape","Example"],r:[["1D","length","Audio signal"],["2D","H x W","Grayscale photo"],["2D + channels","H x W x 3","RGB photo"],["3D","H x W x D","Video, MRI"]]},ex:"A 28x28 digit is 2D with 1 channel; a phone photo has 3 channels.",tip:"Remember the shapes for 1D, 2D and colour."},
+{t:"Convolution Algorithms",d:"These are the ways convolution is computed efficiently on a computer.",p:["**Direct (sliding window)** convolution: simple, slow","**im2col + matrix multiply (GEMM)**: used in most libraries","**FFT-based**: fast for large kernels","**Winograd**: fast for small 3x3 kernels","GPUs run these in parallel"],ex:"Frameworks like TensorFlow use GEMM or Winograd on a GPU.",tip:"Name 3 algorithms and when each is used."},
+{t:"Relation of Convolution Network with Deep Learning",d:"A CNN is a type of **deep learning** model. Stacking many convolution layers makes it deep and lets it learn simple-to-complex features.",p:["Deep learning is the field, CNN is one model in it","More layers = higher-level features","Needs large data and GPU like other deep models","Famous CNNs: LeNet, AlexNet, VGG, ResNet"],fl:"diagram",f:["Deep Learning > Neural Networks > CNN, RNN, GAN ..."],ex:"ResNet with 50 layers classifies 1000 object types.",tip:"One short note (3 marks)."},
+{t:"Difference between CNN and RNN",d:"A **CNN** handles spatial data (images). An **RNN** handles sequential data (text, time).",p:["CNN: no memory of previous input","RNN: loops, remembers earlier steps","CNN trains in parallel; RNN is sequential and slower","RNN may face vanishing gradient"],tb:{h:["Point","CNN","RNN"],r:[["Data","Images, grids","Sequences"],["Memory","None","Yes (hidden state)"],["Connections","Feed-forward","Has loops"],["Key layers","Conv, Pool","Recurrent cells"],["Use","Face detection","Speech, translation"],["Speed","Parallel, fast","Sequential, slower"]]},ex:"CNN: find a dog in a photo. RNN: predict the next word.",tip:"Table with 5 to 6 points scores full marks."},
+{t:"Error Metrics: MAE, MSE, RMSE, R-Squared",d:"These measure the error of **regression** models (predicting numbers).",p:["**MAE**: average absolute error, easy to read","**MSE**: average squared error, punishes big errors","**RMSE**: square root of MSE, same unit as data","**R-squared**: how much variance the model explains (1 is best)"],fl:"formula + numerical",f:["MAE = (1/n) SUM|y - y_hat| ;  MSE = (1/n) SUM(y - y_hat)^2","RMSE = sqrt(MSE) ;  R2 = 1 - SS_res / SS_tot","Actual = [3,5,2,6], Predicted = [2.5,5,3,5.5]","MAE = (0.5+0+1+0.5)/4 = 0.5","MSE = (0.25+0+1+0.25)/4 = 0.375 ;  RMSE = 0.612","mean = 4, SS_tot = 10, SS_res = 1.5, R2 = 1 - 0.15 = 0.85"],ex:"Predicting house prices: RMSE of 2 lakh means the typical error is 2 lakh.",tip:"Learn all four formulas and one small numerical."},
+{t:"Classification Metrics: Accuracy, Confusion Matrix, Precision, Recall, F1-score",d:"These measure **classification** models. The **confusion matrix** counts correct and wrong predictions; the other scores come from it.",p:["**TP**: predicted yes, really yes; **TN**: predicted no, really no","**FP**: predicted yes, really no; **FN**: predicted no, really yes","**Precision**: of predicted yes, how many were right","**Recall**: of real yes, how many were found","**F1**: balance of precision and recall","Accuracy misleads on imbalanced data"],tb:{h:["","Predicted Yes","Predicted No"],r:[["Actual Yes","TP = 40","FN = 5"],["Actual No","FP = 10","TN = 45"]]},fl:"formula + numerical",f:["Accuracy = (TP+TN)/Total = 85/100 = 0.85","Precision = TP/(TP+FP) = 40/50 = 0.80","Recall = TP/(TP+FN) = 40/45 = 0.889","F1 = 2*P*R/(P+R) = 2*0.8*0.889/1.689 = 0.842"],ex:"Cancer test: high recall matters (do not miss patients). Spam filter: high precision matters.",tip:"Draw the 2x2 matrix and calculate all four (7 marks)."},
+{t:"AUC-ROC",d:"The **ROC curve** plots True Positive Rate against False Positive Rate at different thresholds. **AUC** is the area under it.",p:["AUC = 1: perfect model","AUC = 0.5: random guess","Higher AUC = better separation of classes","Does not depend on one threshold"],fl:"formula",f:["TPR = TP/(TP+FN) = 40/45 = 0.889","FPR = FP/(FP+TN) = 10/55 = 0.182"],ex:"Model A has AUC 0.92 and model B has 0.70, so A is better.",tip:"Define TPR, FPR and give the AUC meaning."}
+],qa:{q:["Explain CNN architecture and why convolution is better than feed-forward nets.","Perform convolution on a 3x3 input with a 2x2 kernel.","Differentiate CNN and RNN.","Explain MAE, MSE, RMSE and R-squared with a numerical.","Draw a confusion matrix and find precision, recall, F1 and accuracy. Explain AUC-ROC."],s:["CNN = conv, pooling, FC; uses sparse connections and shared weights.","Output size = (n-k+2p)/s + 1.","CNN is for spatial data, RNN is for sequence data with memory.","Regression: MAE, MSE, RMSE, R2. Classification: accuracy, precision, recall, F1.","AUC-ROC: 1 is perfect, 0.5 is random."]}},
+{id:5,name:"Regularization for Deep Learning",w:20,h:11,ready:true,topics:[
+{t:"L2 Regularization",d:"**L2 regularization (weight decay)** adds the sum of squared weights to the loss. It keeps weights small and reduces over-fitting.",p:["Penalty = lambda * SUM(w^2)","Shrinks weights but rarely makes them exactly zero","Smooth, works well in most cases","Larger lambda = simpler model (risk of under-fitting)"],fl:"formula",f:["Loss = L0 + lambda * SUM(w^2)","Update: w = w - eta*(grad + 2*lambda*w)"],ex:"Fitting a curve through 10 points: L2 stops a wild curve and keeps it smooth.",tip:"Write the loss with the penalty term."},
+{t:"L1 Regularization",d:"**L1 regularization (Lasso)** adds the sum of absolute weights to the loss. It pushes many weights to exactly zero.",p:["Penalty = lambda * SUM|w|","Gives **sparse** weights, so it works as feature selection","Less smooth than L2"],tb:{h:["Point","L1","L2"],r:[["Penalty","SUM|w|","SUM(w^2)"],["Effect","Weights become 0","Weights become small"],["Result","Sparse model","Smooth model"],["Feature selection","Yes","No"]]},fl:"formula",f:["Loss = L0 + lambda * SUM|w|"],ex:"From 100 features, L1 keeps only the 10 useful ones.",tip:"L1 vs L2 table is common."},
+{t:"Entropy Regularization",d:"**Entropy regularization** adds the entropy of the output to the loss so the model does not become over-confident.",p:["Entropy H = - SUM(p * log p)","High entropy = spread-out probabilities","Stops the model giving 100% to one class","Also used in reinforcement learning to keep exploring"],fl:"formula",f:["Loss = L0 - beta * H(p)","H(p) = - SUM( p_i * log p_i )","p = [0.5,0.5] gives H = 0.69 ; p = [1,0] gives H = 0"],ex:"A model predicts 0.7 / 0.3 instead of 1.0 / 0.0, so it generalises better.",tip:"Short note with formula (3 marks)."},
+{t:"Dropout",d:"**Dropout** randomly switches off a fraction of neurons during each training step. This stops neurons depending too much on each other.",p:["Drop rate p, commonly 0.2 to 0.5","Used only in training; all neurons are on during testing","Acts like training many small networks together","Scale by 1/(1-p) (inverted dropout)"],fl:"diagram",f:["Layer: O O O O O  ->  training: O X O O X (X = dropped)","Keep probability = 1 - p"],ex:"A team where each day some members are absent, so everyone learns the whole job.",tip:"Explain training vs testing behaviour."},
+{t:"Data Augmentation",d:"**Data augmentation** creates new training samples by changing existing ones, so the model sees more variety.",p:["Images: flip, rotate, crop, zoom, brightness","Text: synonym replacement; Audio: add noise, shift","Reduces over-fitting without collecting new data","Apply only to training data"],ex:"1000 photos become 5000 after flips and rotations.",tip:"Name 4 techniques."},
+{t:"Optimization for Training Deep Models",d:"**Optimization** means finding parameters that minimise the cost function J(theta). Deep models need special methods because the problem is large and non-convex.",p:["Cost = loss on training data + regularization","Methods: SGD, Momentum, Adagrad, RMSProp, Adam","Tuning: learning rate, batch size, epochs","Tricks: normalisation, good initialisation, early stopping"],fl:"formula",f:["theta* = argmin J(theta)","J(theta) = (1/m) SUM L(f(x_i; theta), y_i) + lambda*R(theta)"],ex:"Training an image classifier by choosing Adam with a learning rate of 0.001.",tip:"Short note on optimization methods."},
+{t:"How Learning Differs from Pure Optimization",d:"Pure optimization only wants the lowest training loss. **Learning** wants low error on **new data** (generalisation).",p:["We minimise the training (empirical) risk, hoping the test risk is low","The true loss (0-1 error) is hard to optimise, so a **surrogate loss** (cross-entropy) is used","Training stops early, before the minimum, to avoid over-fitting","Uses **mini-batches**, not the full data"],tb:{h:["Point","Pure optimization","Machine learning"],r:[["Goal","Minimise the function","Generalise to new data"],["Data","Known function","Samples only"],["Stopping","At the minimum","Early stopping"],["Loss","The real objective","Surrogate loss"]]},ex:"A student who memorises answers (low training error) fails a new question paper.",tip:"Asked as a 4-mark difference."},
+{t:"Challenges in Neural Network Optimization",d:"Training deep networks is hard because the loss surface is complex. Five common problems are listed below.",p:["**Ill-conditioning**: Hessian has very different curvatures, so progress is zig-zag and slow","**Local minima**: a low point that is not the lowest; usually fine in deep nets","**Plateaus**: flat areas with a tiny gradient, so learning stalls","**Saddle points**: gradient is zero but it is a minimum in one direction and a maximum in another; very common in high dimensions","**Other flat regions**: wide flat areas, cliffs and exploding or vanishing gradients"],tb:{h:["Problem","What happens","Fix"],r:[["Ill-conditioning","Slow zig-zag","Momentum, Adam, normalisation"],["Local minima","Stuck at a poor point","Random restarts, SGD noise"],["Plateau","Gradient near 0","Momentum, ReLU, Adam"],["Saddle point","Gradient = 0, not a minimum","SGD noise, momentum"],["Flat region / cliff","Stalls or jumps","Gradient clipping, good init"]]},ex:"A hiker on a wide flat meadow cannot tell which way is downhill.",tip:"List all five with one line each, plus a fix."},
+{t:"Stochastic Gradient Descent (Optimization)",d:"**SGD** is the main training algorithm: it estimates the gradient from a small random mini-batch and updates the weights.",p:["Cheap per step, so it scales to huge data","Noise helps escape saddle points and shallow minima","Learning rate usually decays over time","Momentum and Adam are improved versions"],fl:"formula",f:["g = (1/m) SUM grad L(x_i, y_i)  over a mini-batch of size m","theta = theta - eta * g"],ex:"Train on 32 images at a time and update after each batch.",tip:"Write the algorithm in steps: sample batch, gradient, update, repeat."}
+],qa:{q:["Explain L1 and L2 regularization. Compare them.","What is Dropout? How does it work in training and testing?","Write a note on data augmentation and entropy regularization.","How does learning differ from pure optimization?","Explain ill-conditioning, local minima, plateaus and saddle points."],s:["Regularization reduces over-fitting: L1 gives sparse weights, L2 gives small weights.","Dropout turns off random neurons in training only.","Data augmentation makes new samples from old ones.","Learning aims to generalise, so we use surrogate loss and early stopping.","SGD with mini-batches is the main optimizer; momentum helps with plateaus and saddles."]}}
+]};
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const fm=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<span class="kw">$1</span>');
+const QA="Exam Questions & Summary";
+let tabs=[],cur=null;
+
+/* theme */
+function setTheme(m){document.documentElement.dataset.theme=m;
+  $("theme").textContent=m==="dark"?"\u2600":"\u263E";
+  $("sTheme").textContent=m==="dark"?"Dark+":"Light+";
+  try{localStorage.setItem("dl-theme",m)}catch(e){}}
+let saved=null;try{saved=localStorage.getItem("dl-theme")}catch(e){}
+setTheme(saved||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"));
+const flip=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("theme").onclick=flip;$("sTheme").onclick=flip;
+
+/* topic lookup: key "u.i", i = topic index, i = topics.length means QA */
+function get(k){const [u,i]=k.split(".").map(Number);const un=D.units.find(x=>x.id===u);
+  return {un,i,topic:i<un.topics.length?un.topics[i]:null,qa:i===un.topics.length};}
+function title(k){const g=get(k);return g.qa?QA:g.topic.t;}
+
+/* explorer */
+function tree(){const el=$("tree");el.innerHTML="";
+  D.units.forEach(un=>{const box=document.createElement("div");box.className="unit"+(un.ready?" open":"");
+    const b=document.createElement("button");
+    b.innerHTML='<span class="arr">&#9654;</span>Unit '+un.id+': '+esc(un.name)+(un.ready?'':'')+'<span class="'+(un.ready?"badge":"soon")+'">'+(un.ready?un.w+"%":"coming soon")+'</span>';
+    if(un.ready)b.onclick=()=>box.classList.toggle("open");else b.disabled=true,b.style.opacity=.6;
+    box.appendChild(b);
+    const l=document.createElement("div");l.className="list";
+    if(un.ready){un.topics.concat([{t:QA}]).forEach((t,i)=>{const a=document.createElement("button");
+      a.className="topic";a.dataset.k=un.id+"."+i;a.textContent=t.t;a.onclick=()=>show(a.dataset.k);l.appendChild(a);});}
+    box.appendChild(l);el.appendChild(box);});}
+
+/* tabs and editor */
+function show(k){if(!tabs.includes(k))tabs.push(k);cur=k;draw();closeSide();}
+function closeTab(k,e){e&&e.stopPropagation();const i=tabs.indexOf(k);tabs.splice(i,1);
+  if(cur===k)cur=tabs[i]||tabs[i-1]||null;draw();}
+function ln(h,c){return '<div class="ln '+(c||"")+'">'+h+'</div>';}
+function body(k){const g=get(k),un=g.un;let o="";
+  if(g.qa){o+=ln('<span class="kwd">function</span> <span class="fn">examQuestions</span>() {');
+    o+=ln('<span class="prop">likelyQuestions</span>: [','i1');
+    un.qa.q.forEach((q,i)=>o+=ln('<span class="str">"Q'+(i+1)+'. '+esc(q)+'"</span>,','i2'));
+    o+=ln("],","i1");o+=ln('<span class="prop">quickRevision</span>: [','i1');
+    un.qa.s.forEach(s=>o+=ln('<span class="str">"'+esc(s)+'"</span>,','i2'));
+    o+=ln("],","i1");o+=ln("}");
+    o+=ln('<span class="cmt">// Tip: answer each question aloud in 2 minutes. If you can, the unit is ready.</span>');return o;}
+  const t=g.topic;
+  o+=ln('<span class="kwd">function</span> <span class="fn">'+esc(t.t)+'</span>() {');
+  o+=ln('<span class="prop">definition</span>: '+fm(t.d),"i1");
+  o+=ln('<span class="prop">keyPoints</span>: [',"i1");
+  t.p.forEach(p=>o+=ln(fm(p)+",","i2"));o+=ln("],","i1");
+  if(t.tb){o+=ln('<span class="prop">table</span>:',"i1");
+    o+='<div class="ln i1 tblrow"><div class="tw"><table><tr>'+t.tb.h.map(h=>"<th>"+esc(h)+"</th>").join("")+"</tr>"+
+    t.tb.r.map(r=>"<tr>"+r.map(c=>"<td>"+esc(c)+"</td>").join("")+"</tr>").join("")+"</table></div></div>";}
+  if(t.f){o+=ln('<span class="prop">'+esc(t.fl||"formula")+'</span>:',"i1");
+    t.f.forEach(x=>o+=ln('<span class="str code">'+esc(x)+'</span>',"i2"));}
+  o+=ln('<span class="prop">example</span>: '+fm(t.ex),"i1");
+  o+=ln('<span class="cmt">// Exam tip: '+esc(t.tip)+'</span>',"i1");
+  o+=ln("}");return o;}
+function draw(){
+  $("tabs").innerHTML="";
+  tabs.forEach(k=>{const d=document.createElement("div");d.className="tab"+(k===cur?" on":"");
+    d.innerHTML="<span>"+esc(title(k))+'</span><button class="x" aria-label="Close tab">&times;</button>';
+    d.onclick=()=>{cur=k;draw();};d.querySelector(".x").onclick=e=>closeTab(k,e);$("tabs").appendChild(d);});
+  document.querySelectorAll(".topic").forEach(a=>a.classList.toggle("on",a.dataset.k===cur));
+  if(!cur){$("crumb").textContent=D.name;
+    $("doc").innerHTML=ln('<span class="cmt">// Deep Learning exam notes</span>')+ln('<span class="cmt">// Open a topic from the Explorer, or press Ctrl+P to search.</span>')+ln("")+
+    ln('<span class="kwd">const</span> <span class="prop">units</span> = <span class="str">"all 5 units ready"</span>;');
+    $("sUnit").textContent="Deep Learning Notes";$("sW").textContent="";$("sT").textContent="";return;}
+  const g=get(cur);
+  $("crumb").textContent=D.name+"  \u203A  Unit "+g.un.id+"  \u203A  "+title(cur);
+  $("doc").innerHTML=body(cur);$("scroll").scrollTop=0;
+  $("sUnit").textContent="Unit "+g.un.id+": "+g.un.name;$("sW").textContent="Weightage: "+g.un.w+"%";$("sT").textContent="Teaching hours: "+g.un.h;}
+
+/* drawer and sidebar */
+const mobile=()=>innerWidth<=700;
+function toggleSide(){const s=$("side");if(mobile()){s.classList.toggle("open");$("veil").classList.toggle("on",s.classList.contains("open"));}
+  else s.classList.toggle("collapsed");}
+function closeSide(){if(mobile()){$("side").classList.remove("open");$("veil").classList.remove("on");}}
+$("menu").onclick=toggleSide;$("aExp").onclick=toggleSide;$("veil").onclick=closeSide;
+
+/* search palette (Ctrl+P) */
+let items=[],sel=0;
+function items_(){items=[];D.units.filter(u=>u.ready).forEach(u=>u.topics.concat([{t:QA}]).forEach((t,i)=>items.push({k:u.id+"."+i,t:t.t,u:"Unit "+u.id})));}
+function plist(){const q=$("pin").value.toLowerCase();const r=items.filter(x=>(x.t+" "+x.u).toLowerCase().includes(q));
+  sel=Math.min(sel,Math.max(r.length-1,0));const el=$("plist");el.innerHTML="";
+  if(!r.length){el.innerHTML='<div class="empty">No topic found</div>';return r;}
+  r.forEach((x,i)=>{const b=document.createElement("button");b.className=i===sel?"sel":"";
+    b.innerHTML=esc(x.t)+"<small>"+x.u+"</small>";b.onclick=()=>{pick(x.k)};el.appendChild(b);
+    if(i===sel)b.scrollIntoView({block:"nearest"});});return r;}
+function pick(k){$("pal").classList.remove("on");show(k);}
+function openPal(){items_();$("pal").classList.add("on");$("pin").value="";sel=0;plist();$("pin").focus();}
+$("find").onclick=openPal;$("aSea").onclick=openPal;
+$("pal").onclick=e=>{if(e.target===$("pal"))$("pal").classList.remove("on");};
+$("pin").oninput=()=>{sel=0;plist();};
+$("pin").onkeydown=e=>{const r=plist();
+  if(e.key==="ArrowDown"){sel=Math.min(sel+1,r.length-1);plist();e.preventDefault();}
+  else if(e.key==="ArrowUp"){sel=Math.max(sel-1,0);plist();e.preventDefault();}
+  else if(e.key==="Enter"&&r[sel])pick(r[sel].k);};
+document.addEventListener("keydown",e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="p"){e.preventDefault();openPal();}
+  else if(e.key==="Escape")$("pal").classList.remove("on");});
+
+tree();draw();show("1.0");
+</script>
+</body>
+</html>
